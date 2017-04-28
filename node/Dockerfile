@@ -1,29 +1,9 @@
-# Set the base image to Ubuntu
-FROM    ubuntu:trusty
+FROM nodesource/jessie:0.12.7
 
-# File Author / Maintainer
-MAINTAINER Anand Mani Sankar
+# cache package.json and node_modules to speed up builds
+ADD package.json package.json
+RUN npm install
 
-# Install Node.js and other dependencies
-RUN apt-get update && \
-    apt-get -y install curl && \
-    curl -sL https://deb.nodesource.com/setup | sudo bash - && \
-    apt-get -y install python build-essential nodejs
-
-# Install nodemon
-RUN npm install -g nodemon
-
-# Provides cached layer for node_modules
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install
-RUN mkdir -p /src && cp -a /tmp/node_modules /src/
-
-# Define working directory
-WORKDIR /src
-ADD . /src
-
-# Expose port
-EXPOSE  8080
-
-# Run app using nodemon
-CMD ["nodemon", "/src/index.js"]
+# Add your source files
+ADD . .
+CMD ["node","index.js"]

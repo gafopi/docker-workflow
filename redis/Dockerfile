@@ -1,14 +1,6 @@
-# Set the base image to Ubuntu
-FROM        ubuntu
+FROM redis:latest
 
-# File Author / Maintainer
-MAINTAINER Anand Mani Sankar
-
-# Update the repository and install Redis Server
-RUN         apt-get update && apt-get install -y redis-server
-
-# Expose Redis port 6379
+# start redis with custom configuration
+COPY redis.conf /usr/local/etc/redis/redis.conf
 EXPOSE      6379
-
-# Run Redis Server
-ENTRYPOINT  ["/usr/bin/redis-server"]
+CMD [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
